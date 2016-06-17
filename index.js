@@ -2,14 +2,13 @@ var express = require('express')
 var path = require('path');
 var moment = require('moment');
 var app = express()
-
 var port = process.env.PORT || 8000;
 
 app.get('/', function(req, res) {
   var file = path.join(__dirname, 'index.html')
   res.sendFile(file, function(err) {
     if (err) {
-      console.log(err)
+      console.error(err)
       res.sendStatus(err.status)
     } else {
       console.log("SENT " + file)
@@ -18,24 +17,24 @@ app.get('/', function(req, res) {
 })
 
 app.get('/:dateString', function(req, res) {
-  var date;
-  if (/^\d+$/g.test(req.params.dateString)) {
-    var date = moment(req.params.dateString, 'X')
-  } else {
-    var date = moment(req.params.dateString, "MMMM DD, YYYY")
-  }
+  var result
+  var regex = /^\d+$/g
+  var date = req.params.dateString;
+  date = regex.test(date) ? moment(date, 'X') : moment(date, "MMMM DD, YYYY")
 
   if(date.isValid()) {
-    res.json({
+    result = {
       "unix": date.format("X"),
       "natural": date.format("MMMM DD, YYYY")
-    })
+    }
   } else {
-    res.json({
+    result = {
       "unix": null,
       "natural": null
-    })
+    }
   }
+
+  res.json(result)
 })
 
 app.listen(port, function() {
