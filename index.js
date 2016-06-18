@@ -1,9 +1,8 @@
 var express = require('express');
 var path = require('path');
 var moment = require('moment');
-var fs = require('fs');
 var app = express();
-var port = process.env.PORT || 3500;
+var port = process.env.PORT || 8200;
 
 app.listen(port, function() {
   console.log("Server started on port " + port + "!" );
